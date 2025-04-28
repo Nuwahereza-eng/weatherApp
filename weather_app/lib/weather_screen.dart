@@ -26,6 +26,7 @@ class WeatherScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: double.infinity,
@@ -61,9 +62,54 @@ class WeatherScreen extends StatelessWidget {
                         
                         child: Text("Weather Forecast",
                         style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
+                        
                         ),
                       ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text("Monday",
+                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                    SizedBox(height: 10),
+                    Icon(Icons.cloud,
+                    size: 50,),
+                    SizedBox(height: 10),
+                    Text("300°F",
+                    style: TextStyle(fontSize: 18),),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text("Tuesday",
+                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                    SizedBox(height: 10),
+                    Icon(Icons.cloud,
+                    size: 50,),
+                    SizedBox(height: 10),
+                    Text("300°F",
+                    style: TextStyle(fontSize: 18),),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text("Wednesday",
+                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                    SizedBox(height: 10),
+                    Icon(Icons.cloud,
+                    size: 50,),
+                    SizedBox(height: 10),
+                    Text("300°F",
+                    style: TextStyle(fontSize: 18),),
+                  ],
+                ),
+              ],
+            )
+              
+              
+            
           ],
         ),
       ),
