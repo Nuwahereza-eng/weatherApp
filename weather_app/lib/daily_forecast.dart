@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 class WeatherForecastItem extends StatelessWidget {
-  const WeatherForecastItem({super.key});
+  final String day;
+  final String temperature;
+  final IconData icon;
+  const WeatherForecastItem({super.key, required this.day, required this.temperature, required this.icon});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -14,13 +17,13 @@ class WeatherForecastItem extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Text("Monday",
+                          Text(day,
                           style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                           SizedBox(height: 10),
-                          Icon(Icons.cloud,
+                          Icon(icon,
                           size: 50,),
                           SizedBox(height: 10),
-                          Text("300°F",
+                          Text(temperature,
                           style: TextStyle(fontSize: 18),),
                         ],
                       ),
