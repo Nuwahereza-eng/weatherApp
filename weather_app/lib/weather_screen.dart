@@ -66,46 +66,18 @@ class WeatherScreen extends StatelessWidget {
                         ),
                       ),
             SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Text("Monday",
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                    SizedBox(height: 10),
-                    Icon(Icons.cloud,
-                    size: 50,),
-                    SizedBox(height: 10),
-                    Text("300°F",
-                    style: TextStyle(fontSize: 18),),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("Tuesday",
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                    SizedBox(height: 10),
-                    Icon(Icons.cloud,
-                    size: 50,),
-                    SizedBox(height: 10),
-                    Text("300°F",
-                    style: TextStyle(fontSize: 18),),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("Wednesday",
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                    SizedBox(height: 10),
-                    Icon(Icons.cloud,
-                    size: 50,),
-                    SizedBox(height: 10),
-                    Text("300°F",
-                    style: TextStyle(fontSize: 18),),
-                  ],
-                ),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  WeatherForecastItem(),
+                  WeatherForecastItem(),
+                  WeatherForecastItem(),
+                  WeatherForecastItem(),
+                  WeatherForecastItem(),
+                ],
+              ),
             )
               
               
@@ -114,7 +86,34 @@ class WeatherScreen extends StatelessWidget {
         ),
       ),
     );
+  } 
+}
+class WeatherForecastItem extends StatelessWidget {
+  const WeatherForecastItem({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+                    elevation: 6,
+                    child: Container(
+                      width: 150,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        
+                      ),
+                      child: Column(
+                        children: [
+                          Text("Monday",
+                          style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                          SizedBox(height: 10),
+                          Icon(Icons.cloud,
+                          size: 50,),
+                          SizedBox(height: 10),
+                          Text("300°F",
+                          style: TextStyle(fontSize: 18),),
+                        ],
+                      ),
+                    ),
+                  );
   }
-
-  
 }
