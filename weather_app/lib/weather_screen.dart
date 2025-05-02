@@ -16,6 +16,8 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen> {
   // Define variables to store weather data
+  
+  String cityName = 'Uganda';
   double temp = 0.0;
   String weatherDescription = '';
   double humidity = 0.0;
@@ -31,23 +33,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
   // You can use the http package to make network requests
   // For example, you can use the following code to fetch weather data
   // from the OpenWeatherMap API
- Future fetchWeatherData() async {
-    final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Uganda&appid=92426cabbce89d3a1bc03191b50665ea&units=metric'));
+ Future<Map<String, dynamic>> fetchWeatherData() async {
+    
+    final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/forecast?q=$cityName&appid=92426cabbce89d3a1bc03191b50665ea&units=metric'));
 final data = jsonDecode(response.body);
     
     if (response.statusCode == 200) {
-      setState(() {
-        temp = data['main']['temp'].toDouble();
-        weatherDescription = data['weather'][0]['description'];
-        humidity = data['main']['humidity'].toDouble();
-        windSpeed = data['wind']['speed'].toDouble();
-        pressure = data['main']['pressure'].toDouble();
-        visibility = data['visibility'].toDouble();
-      });
-      
+        return data; 
     } else {
-      throw Exception('Failed to load weather data');
-    
+      throw Exception('Unexpected error occurred!');
     }
     
   }
@@ -69,85 +63,108 @@ final data = jsonDecode(response.body);
             ),
           ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Card(
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                      child: Padding(
-                       padding: const EdgeInsets.all(16.0),
-                       child: Column(
-                        children: [Text("$temp°C",
-                        style: TextStyle(fontSize: 48,fontWeight: FontWeight.bold)),
-                        SizedBox(height: 20),
-                        Icon(Icons.cloud,
-                        size: 100,),
-                        SizedBox(height: 20),
-                        Text(weatherDescription,
-                        style:TextStyle(fontSize: 32,),),
-                        
-                        ],
-                                     ),
-                                     ),
-                    ),
-                  )),
-              ),
-            SizedBox(height: 20),
-                        Text("Weather Forecast",
-                        style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
-                        
-                        ),
-              SizedBox(height: 20),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    WeatherForecastItem(day: "Monday",icon: Icons.sunny, temperature: "300°F"),
-                    WeatherForecastItem(day: "Tuesday",icon: Icons.sunny_snowing, temperature: "290°F"),
-                    WeatherForecastItem(day: "Wednesday",icon: Icons.cloud, temperature: "280°F"),
-                    WeatherForecastItem(day: "Thursday",icon: Icons.cloud, temperature: "270°F"),
-                    WeatherForecastItem(day: "Friday",icon:Icons.sunny ,temperature:  "260°F"),
-                    
-                  ],
-                ),
-              ),
-                
-                
-              
-           SizedBox(height: 20),
-                        Text("Additional Information",
-                        style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
-                        
-                        ), 
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            AdditionalInfo(icon: Icons.thermostat, title: "Humidity", value: "$humidity%"),
-                            AdditionalInfo(icon: Icons.visibility, title: "Visibility", value: "$visibility km"),
-                            AdditionalInfo(icon: Icons.speed, title: "Pressure", value: "$pressure hPa"),
-                            AdditionalInfo(icon: Icons.air, title: "Wind Speed", value: "$windSpeed km/h"),
-                          ],
-                        ),
+      body: 
+       FutureBuilder(
+        future: fetchWeatherData(),
+        builder: (context, snapshot) {
+         if (snapshot.connectionState == ConnectionState.waiting) {
+           return Center(child: CircularProgressIndicator.adaptive());
+         } else if (snapshot.hasError) {
+           return Center(child: Text('Error: ${snapshot.error}'));
+         } else if (!snapshot.hasData || snapshot.data == null) {
+    return Center(child: Text('No data available.'));
+         } 
+
+        final data = snapshot.data!;
+
+        final temp = data['list'][0]['main']['temp'].toDouble();
+        final weatherDescription = data['list'][0]['main']['weather'][0]['description'];
+        final humidity = data['list'][0]['main']['humidity'].toDouble();
+        final windSpeed = data['list'][0]['main']['wind']['speed'].toDouble();
+        final pressure = data['list'][0]['main']['pressure'].toDouble();
+        final visibility = data['list'][0]['visibility'].toDouble();
           
-          ],
+          
+         return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                        child: Padding(
+                         padding: const EdgeInsets.all(16.0),
+                         child: Column(
+                          children: [Text("$temp°C",
+                          style: TextStyle(fontSize: 48,fontWeight: FontWeight.bold)),
+                          SizedBox(height: 20),
+                          Icon(weatherDescription == 'clear' ? Icons.sunny : Icons.cloud,
+                          size: 100,),
+                          SizedBox(height: 20),
+                          Text(weatherDescription,
+                          style:TextStyle(fontSize: 32,),),
+                          
+                          ],
+                                       ),
+                                       ),
+                      ),
+                    )),
+                ),
+              SizedBox(height: 20),
+                          Text("Weather Forecast",
+                          style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
+                          
+                          ),
+                SizedBox(height: 20),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (int i = 0; i < 5; i++)
+                      WeatherForecastItem(
+                        time: data['list'][i+1]['dt'].toString(),
+                        icon: Icons.sunny,
+                        temperature: "${data['list'][i+1]['main']['temp']}°C",),
+                      
+                    ],
+                  ),
+                ),
+                  
+                  
+                
+             SizedBox(height: 20),
+                          Text("Additional Information",
+                          style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
+                          
+                          ), 
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              AdditionalInfo(icon: Icons.thermostat, title: "Humidity", value: "$humidity%"),
+                              AdditionalInfo(icon: Icons.visibility, title: "Visibility", value: "$visibility km"),
+                              AdditionalInfo(icon: Icons.speed, title: "Pressure", value: "$pressure hPa"),
+                              AdditionalInfo(icon: Icons.air, title: "Wind Speed", value: "$windSpeed km/h"),
+                            ],
+                          ),
+            
+            ],
+            ),
           ),
-        ),
-      ),
+               );
+   } ),
     );
   } 
 }

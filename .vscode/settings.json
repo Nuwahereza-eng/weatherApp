@@ -1,7 +1,10 @@
 {
     "cSpell.words": [
         "allprojects",
+        "jvmargs",
+        "Metaspace",
         "Subproject",
         "subprojects"
-    ]
+    ],
+    "editor.cursorWidth": 2
 }
