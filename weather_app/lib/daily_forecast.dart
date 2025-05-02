@@ -18,7 +18,9 @@ class WeatherForecastItem extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(time,
-                          style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                          style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,),
                           SizedBox(height: 10),
                           Icon(icon,
                           size: 50,),

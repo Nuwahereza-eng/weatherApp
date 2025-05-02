@@ -11,9 +11,9 @@ class AdditionalInfo extends StatelessWidget {
       return Column(
                     children: [
                       Icon(icon,
-                      size: 50,),
+                      size: 40,),
                       Text(title,
-                      style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                      style: TextStyle(fontSize: 18,),),
                       SizedBox(height: 10),
                       Text(value),
                     ],

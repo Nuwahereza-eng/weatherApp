@@ -18,17 +18,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
   // Define variables to store weather data
   
   String cityName = 'Uganda';
-  double temp = 0.0;
+  
   String weatherDescription = '';
   double humidity = 0.0;
   double windSpeed = 0.0;
   double pressure = 0.0;
   double visibility = 0.0;
-  @override
-  void initState() {
-    super.initState();
-    fetchWeatherData();
-  }
+  
   // Function to fetch weather data from the API
   // You can use the http package to make network requests
   // For example, you can use the following code to fetch weather data
@@ -44,6 +40,7 @@ final data = jsonDecode(response.body);
       throw Exception('Unexpected error occurred!');
     }
     
+    
   }
 
   @override
@@ -58,6 +55,9 @@ final data = jsonDecode(response.body);
             IconButton(
               icon: Icon(Icons.refresh),
               onPressed: () {
+                setState(() {
+                  fetchWeatherData();
+                });
                 // Handle settings action
               },
             ),
@@ -71,17 +71,15 @@ final data = jsonDecode(response.body);
            return Center(child: CircularProgressIndicator.adaptive());
          } else if (snapshot.hasError) {
            return Center(child: Text('Error: ${snapshot.error}'));
-         } else if (!snapshot.hasData || snapshot.data == null) {
-    return Center(child: Text('No data available.'));
          } 
 
         final data = snapshot.data!;
 
-        final temp = data['list'][0]['main']['temp'].toDouble();
-        final weatherDescription = data['list'][0]['main']['weather'][0]['description'];
+        final currentTemp = data['list'][0]['main']['temp'];
+        final weatherDescription = data['list'][0]['weather'][0]['description'];
         final humidity = data['list'][0]['main']['humidity'].toDouble();
-        final windSpeed = data['list'][0]['main']['wind']['speed'].toDouble();
-        final pressure = data['list'][0]['main']['pressure'].toDouble();
+        final windSpeed = data['list'][0]['wind']['speed'].toDouble();
+        final pressure = data['list'][0]['main']['pressure'];
         final visibility = data['list'][0]['visibility'].toDouble();
           
           
@@ -106,7 +104,7 @@ final data = jsonDecode(response.body);
                         child: Padding(
                          padding: const EdgeInsets.all(16.0),
                          child: Column(
-                          children: [Text("$temp°C",
+                          children: [Text("$currentTemp°C",
                           style: TextStyle(fontSize: 48,fontWeight: FontWeight.bold)),
                           SizedBox(height: 20),
                           Icon(weatherDescription == 'clear' ? Icons.sunny : Icons.cloud,
@@ -127,24 +125,41 @@ final data = jsonDecode(response.body);
                           
                           ),
                 SizedBox(height: 20),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (int i = 0; i < 5; i++)
-                      WeatherForecastItem(
-                        time: data['list'][i+1]['dt'].toString(),
-                        icon: Icons.sunny,
-                        temperature: "${data['list'][i+1]['main']['temp']}°C",),
+                // SingleChildScrollView(
+                //   scrollDirection: Axis.horizontal,
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       for (int i = 0; i < 5; i++)
+                //       WeatherForecastItem(
+                //         time: "${data['list'][i+1]['dt']}",
+                //         icon: data['list'][i+1]['weather'][0]['main'] == 'Clouds' || data['list'][i+1]['weather'][0]['main'] == 'Rain' ?
+                //          Icons.cloud : Icons.sunny,
+                //         temperature: "${data['list'][i+1]['main']['temp']}°C",),
                       
-                    ],
-                  ),
-                ),
+                //     ],
+                //   ),
+                // ),
                   
                   
-                
-             SizedBox(height: 20),
+            SizedBox(
+              height: 160,
+              
+              child: ListView.builder(
+                itemCount: 10,
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final time = DateTime.fromMillisecondsSinceEpoch(data['list'][index +1]['dt'] * 1000);
+                  final formattedTime = "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
+                return WeatherForecastItem(
+                  time: formattedTime,
+                  icon: data['list'][index +1]['weather'][0]['main'] == 'Clouds' || data['list'][index +1]['weather'][0]['main'] == 'Rain' ?
+                   Icons.cloud : Icons.sunny,
+                  temperature: "${data['list'][index +1]['main']['temp']}°C",);
+              },),
+            ),             SizedBox(height: 20),
                           Text("Additional Information",
                           style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
                           
