@@ -3,6 +3,7 @@
         "allprojects",
         "jvmargs",
         "Metaspace",
+        "pubspec",
         "Subproject",
         "subprojects"
     ],
