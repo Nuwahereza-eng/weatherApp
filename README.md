@@ -102,7 +102,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [Flutter](https://flutter.dev/) for providing an amazing framework for cross-platform development.
 - Weather API provider (openweather.org).
 
-bash
-
-Replace `https://github.com/your-username/weather_app.git` with the actual URL of your repository and update the "Acknowledgments" section with the weather API you are using, if applicable.
-   flutter pub get
