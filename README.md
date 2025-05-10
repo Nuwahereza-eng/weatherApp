@@ -11,7 +11,7 @@ A cross-platform weather application built using Flutter. This app provides weat
 
 ## Images
 
-![Weather Screen](images/weatherScreen.png)
+![Weather Screen](weather_app/images/weatherScreen.png)
 
 ## Getting Started
 
