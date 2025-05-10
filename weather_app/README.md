@@ -9,6 +9,10 @@ A cross-platform weather application built using Flutter. This app provides weat
 - Supports multiple platforms, including Android, iOS, Windows, Linux, macOS, and Web.
 - Dark theme enabled by default.
 
+## Images
+
+![Alt Text](assets/images/weatherScreen.png)
+
 ## Getting Started
 
 ### Prerequisites
@@ -21,7 +25,7 @@ A cross-platform weather application built using Flutter. This app provides weat
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/weather_app.git
+   git clone https://github.com/nuwahereza-eng/weather_app.git
    cd weather_app
    ```bash
 
